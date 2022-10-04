@@ -2,7 +2,11 @@
 function populate() {
     console.log("loading data");
     let station_list = document.getElementById("station_list");
+    let search_bar = document.getElementById("search_bar")
     let bus_stations = '';
+    let load_message = document.createElement("h3");
+    load_message.innerText = "Loading...";
+    station_list?.appendChild(load_message);
 
     fetch('https://h4nmsf5uxc2kytzpco74ds5ody0mffge.lambda-url.us-west-2.on.aws/')
         .then(function (response) {
@@ -28,13 +32,19 @@ function populate() {
                     route = bus_stations[s][i]
                     const p = document.createElement('p')
                     p.textContent = "route name: " + route['name'] + " edt: " + route['edt'] + " sdt: " + route['sdt']
+                    console.log(route['edt'], route['sdt'])
+                    if (route['edt'] !== route['sdt']){
+                        p.className = "p-3 mb-2 bg-success text-dark"
+                    } else {
+                        p.className = "p-3 mb-2 bg-warning text-dark"
+                    }
                     div.appendChild(p)
                 }
-
+                load_message.remove()
             }
-
-
         });
+
+    search_bar.setAttribute("onkeyup", "filter();")
 
 }
 
