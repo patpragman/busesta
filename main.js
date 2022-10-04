@@ -32,7 +32,7 @@ function populate() {
                     route = bus_stations[s][i]
                     const p = document.createElement('p')
                     p.textContent = "route name: " + route['name'] + " edt: " + route['edt'] + " sdt: " + route['sdt']
-                    console.log(route['edt'], route['sdt'])
+
                     if (route['edt'] !== route['sdt']){
                         p.className = "p-3 mb-2 bg-success text-dark"
                     } else {
