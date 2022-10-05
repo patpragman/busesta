@@ -8,13 +8,21 @@ function populate() {
     load_message.innerText = "Loading...";
     station_list?.appendChild(load_message);
 
-    fetch('https://h4nmsf5uxc2kytzpco74ds5ody0mffge.lambda-url.us-west-2.on.aws/')
+    try{
+        // fetch the data from the API
+        fetch('https://h4nmsf5uxc2kytzpco74ds5ody0mffge.lambda-url.us-west-2.on.aws/')
         .then(function (response) {
             return response.json();
         })
         .then(function (api_data) {
 
             bus_stations = api_data
+
+            if (bus_stations == {}){
+                console.log("api returned empty data, trying again...")
+                populate()
+            }
+
 
             let route;
             for (let s in bus_stations) {
@@ -43,6 +51,11 @@ function populate() {
                 load_message.remove()
             }
         });
+    } catch {
+        // uh oh, something bad happened let's try again
+        populate();
+    }
+
 
     search_bar.setAttribute("onkeyup", "filter();")
 
