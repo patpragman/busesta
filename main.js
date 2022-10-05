@@ -1,14 +1,11 @@
 
-function populate() {
+function populate(attempts = 0) {
     // big try catch to catch literally everything - gross and terrible form, I know... but we ain't building a watch
     // here - though I want it to timeout after 5 tries
-    let attempt_counter = 0;
     try{
-        attempt_counter = attempt_counter + 1;
-
         console.log("loading data");
         let station_list = document.getElementById("station_list");
-        let search_bar = document.getElementById("search_bar")
+        let search_bar = document.getElementById("search_bar");
         let bus_stations = '';
         let load_message = document.createElement("h3");
         load_message.innerText = "Loading...";
@@ -56,37 +53,41 @@ function populate() {
                 load_message.remove()
             }
         });
+
+        search_bar.setAttribute("onkeyup", "filter();");
+
     } catch {
         // uh oh, something bad happened let's try again
-        if (attempt_counter >= 5){
+        if (attempts >= 5){
             console.log('Major error...')
         } else{
-            populate();
+            populate(attempts + 1);
         }
 
     }
 
 
-    search_bar.setAttribute("onkeyup", "filter();")
 
 }
 
 function filter() {
 
-    let input, filter, content_div, subdivs;
+    let station_input, filter, content_div, subdivs;
 
-    input = document.getElementById("search_bar");
-    filter = input.value.toUpperCase();
+    station_input = document.getElementById("search_bar");
+    filter = station_input.value.toUpperCase();
 
     content_div = document.getElementById("station_list");
     subdivs = content_div.getElementsByTagName("div");
     for (let i in subdivs){
         let d = subdivs[i];
-
-        if (d.id.toUpperCase().indexOf(filter) > -1){
-            d.style.display = "";
-        } else {
-            d.style.display = "none";
+        if (d instanceof Element){
+            let text = d.innerText;
+            if (text.toUpperCase().indexOf(filter) > -1){
+                d.style.display = "";
+            } else {
+                d.style.display = "none";
+            }
         }
     }
 }
